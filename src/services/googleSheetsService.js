@@ -46,6 +46,7 @@ class GoogleSheetsService {
       categoria = "",
       producto = "",
       precio = "",
+      descripcion = "",
       imagen = "",
     } = itemData;
     const id = Date.now().toString();
@@ -56,11 +57,11 @@ class GoogleSheetsService {
       range: this.range,
       valueInputOption: "USER_ENTERED",
       resource: {
-        values: [[id, categoria, producto, precio, imagen]],
+        values: [[id, categoria, producto, precio, descripcion, imagen]],
       },
     });
 
-    return { id, categoria, producto, precio, imagen };
+    return { id, categoria, producto, precio, descripcion, imagen };
   }
 
   async updateItem(id, updateData) {
@@ -92,11 +93,12 @@ class GoogleSheetsService {
       updateData.categoria ?? existing[1] ?? "",
       updateData.producto ?? existing[2] ?? "",
       updateData.precio ?? existing[3] ?? "",
-      updateData.imagen ?? existing[4] ?? "",
+      updateData.descripcion ?? existing[4] ?? "",
+      updateData.imagen ?? existing[5] ?? "",
     ];
 
     const spreadsheetRow = foundIndex + 1;
-    const updateRange = `${this.sheetName}!A${spreadsheetRow + 1}:E${
+    const updateRange = `${this.sheetName}!A${spreadsheetRow + 1}:F${
       spreadsheetRow + 1
     }`;
 

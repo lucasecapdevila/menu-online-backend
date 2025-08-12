@@ -1,7 +1,7 @@
 import { HTTP_STATUS } from "../utils/constants.js";
 
 export const validateMenuItemCreate = (req, res, next) => {
-  const { categoria, producto, precio } = req.body;
+  const { categoria, producto, precio, descripcion, imagen } = req.body;
 
   const errors = [];
 
@@ -19,6 +19,20 @@ export const validateMenuItemCreate = (req, res, next) => {
     errors.push("Precio debe ser un número válido");
   }
 
+  // Descripción es opcional pero si se proporciona no puede estar vacía
+  if (descripcion !== undefined && descripcion.trim() === "") {
+    errors.push("Descripción no puede estar vacía si se proporciona");
+  }
+
+  // Imagen es opcional pero si se proporciona debe ser una URL válida
+  if (imagen !== undefined && imagen.trim() !== "") {
+    const urlPattern =
+      /^(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
+    if (!urlPattern.test(imagen)) {
+      errors.push("Imagen debe ser una URL válida");
+    }
+  }
+
   if (errors.length > 0) {
     return res.status(HTTP_STATUS.BAD_REQUEST).json({
       error: "Datos de entrada inválidos",
@@ -30,7 +44,7 @@ export const validateMenuItemCreate = (req, res, next) => {
 };
 
 export const validateMenuItemUpdate = (req, res, next) => {
-  const { categoria, producto, precio } = req.body;
+  const { categoria, producto, precio, descripcion, imagen } = req.body;
   const errors = [];
 
   // Para actualización, los campos son opcionales pero si se proporcionan deben ser válidos
@@ -47,6 +61,18 @@ export const validateMenuItemUpdate = (req, res, next) => {
       errors.push("Precio no puede estar vacío");
     } else if (isNaN(parseFloat(precio))) {
       errors.push("Precio debe ser un número válido");
+    }
+  }
+
+  if (descripcion !== undefined && descripcion.trim() === "") {
+    errors.push("Descripción no puede estar vacía");
+  }
+
+  if (imagen !== undefined && imagen.trim() !== "") {
+    const urlPattern =
+      /^(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
+    if (!urlPattern.test(imagen)) {
+      errors.push("Imagen debe ser una URL válida");
     }
   }
 
