@@ -90,14 +90,14 @@ ALLOWED_ORIGINS=http://localhost:3000,https://tu-dominio.com
 
 La hoja de cálculo debe tener las siguientes columnas en este orden:
 
-| A | B | C | D | E | F |
-|---|---|---|---|---|---|
-| ID | CATEGORIA | PRODUCTO | PRECIO | DESCRIPCION | IMAGEN |
+| A | B | C | D | E | F | G | H |
+|---|---|---|---|---|---|---|---|
+| ID | CATEGORIA | SUBCATEGORIA | PRODUCTO | PRECIO | DESCRIPCION | STOCK | IMG |
 
 **Ejemplo de datos:**
-| ID | CATEGORIA | PRODUCTO | PRECIO | DESCRIPCION | IMAGEN |
-|----|-----------|----------|---------|-------------|---------|
-| 1234567890 | Bebidas | Coca Cola | 2.50 | Bebida gaseosa refrescante | https://example.com/coca.jpg |
+| ID | CATEGORIA | SUBCATEGORIA | PRODUCTO | PRECIO | DESCRIPCION | STOCK | IMG |
+|----|-----------|--------------|----------|---------|-------------|-------|-----|
+| 1234567890 | Bebidas | Gaseosas | Coca Cola | 2.50 | Bebida gaseosa refrescante | 50 | https://example.com/coca.jpg |
 
 ### Configuración de Google Cloud
 
@@ -152,10 +152,12 @@ GET /menu
   {
     "ID": "1234567890",
     "CATEGORIA": "Bebidas",
+    "SUBCATEGORIA": "Gaseosas",
     "PRODUCTO": "Coca Cola",
     "PRECIO": "2.50",
     "DESCRIPCION": "Bebida gaseosa refrescante",
-    "IMAGEN": "https://example.com/coca.jpg",
+    "STOCK": "50",
+    "IMG": "https://example.com/coca.jpg",
     "_rowNumber": 2
   }
 ]
@@ -170,10 +172,12 @@ Content-Type: application/json
 ```json
 {
   "categoria": "Bebidas",
+  "subcategoria": "Gaseosas", // Opcional
   "producto": "Pepsi",
   "precio": 2.30,
   "descripcion": "Bebida cola refrescante", // Opcional
-  "imagen": "https://example.com/pepsi.jpg" // Opcional
+  "stock": 25, // Opcional
+  "img": "https://example.com/pepsi.jpg" // Opcional
 }
 ```
 **Respuesta:**
@@ -181,10 +185,12 @@ Content-Type: application/json
 {
   "id": "1234567891",
   "categoria": "Bebidas",
+  "subcategoria": "Gaseosas",
   "producto": "Pepsi",
   "precio": 2.30,
   "descripcion": "Bebida cola refrescante",
-  "imagen": "https://example.com/pepsi.jpg"
+  "stock": 25,
+  "img": "https://example.com/pepsi.jpg"
 }
 ```
 
@@ -197,8 +203,11 @@ Content-Type: application/json
 ```json
 {
   "categoria": "Bebidas Gaseosas",
+  "subcategoria": "Cola",
   "precio": 2.80,
-  "descripcion": "Nueva descripción"
+  "descripcion": "Nueva descripción",
+  "stock": 30,
+  "img": "https://example.com/nueva-imagen.jpg"
 }
 ```
 
@@ -229,7 +238,9 @@ DELETE /menu/:id
   "error": "Datos de entrada inválidos",
   "details": [
     "Categoría es requerida",
-    "Precio debe ser un número válido"
+    "Precio debe ser un número válido",
+    "Stock debe ser un número entero mayor o igual a 0",
+    "Imagen debe ser una URL válida"
   ]
 }
 ```

@@ -44,10 +44,12 @@ class GoogleSheetsService {
   async createItem(itemData) {
     const {
       categoria = "",
+      subcategoria = "",
       producto = "",
       precio = "",
       descripcion = "",
-      imagen = "",
+      stock = "",
+      img = "",
     } = itemData;
     const id = Date.now().toString();
     const sheets = await this.getSheets();
@@ -57,11 +59,31 @@ class GoogleSheetsService {
       range: this.range,
       valueInputOption: "USER_ENTERED",
       resource: {
-        values: [[id, categoria, producto, precio, descripcion, imagen]],
+        values: [
+          [
+            id,
+            categoria,
+            subcategoria,
+            producto,
+            precio,
+            descripcion,
+            stock,
+            img,
+          ],
+        ],
       },
     });
 
-    return { id, categoria, producto, precio, descripcion, imagen };
+    return {
+      id,
+      categoria,
+      subcategoria,
+      producto,
+      precio,
+      descripcion,
+      stock,
+      img,
+    };
   }
 
   async updateItem(id, updateData) {
@@ -91,14 +113,16 @@ class GoogleSheetsService {
     const newRow = [
       id,
       updateData.categoria ?? existing[1] ?? "",
-      updateData.producto ?? existing[2] ?? "",
-      updateData.precio ?? existing[3] ?? "",
-      updateData.descripcion ?? existing[4] ?? "",
-      updateData.imagen ?? existing[5] ?? "",
+      updateData.subcategoria ?? existing[2] ?? "",
+      updateData.producto ?? existing[3] ?? "",
+      updateData.precio ?? existing[4] ?? "",
+      updateData.descripcion ?? existing[5] ?? "",
+      updateData.stock ?? existing[6] ?? "",
+      updateData.img ?? existing[7] ?? "",
     ];
 
     const spreadsheetRow = foundIndex + 1;
-    const updateRange = `${this.sheetName}!A${spreadsheetRow + 1}:F${
+    const updateRange = `${this.sheetName}!A${spreadsheetRow + 1}:H${
       spreadsheetRow + 1
     }`;
 

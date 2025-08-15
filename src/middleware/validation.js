@@ -1,12 +1,18 @@
 import { HTTP_STATUS } from "../utils/constants.js";
 
 export const validateMenuItemCreate = (req, res, next) => {
-  const { categoria, producto, precio, descripcion, imagen } = req.body;
+  const { categoria, subcategoria, producto, precio, descripcion, stock, img } =
+    req.body;
 
   const errors = [];
 
   if (!categoria || categoria.trim() === "") {
     errors.push("Categoría es requerida");
+  }
+
+  // Subcategoría es opcional pero si se proporciona no puede estar vacía
+  if (subcategoria !== undefined && subcategoria.trim() === "") {
+    errors.push("Subcategoría no puede estar vacía si se proporciona");
   }
 
   if (!producto || producto.trim() === "") {
@@ -24,11 +30,20 @@ export const validateMenuItemCreate = (req, res, next) => {
     errors.push("Descripción no puede estar vacía si se proporciona");
   }
 
+  // Stock es opcional pero si se proporciona debe ser un número válido
+  if (stock !== undefined) {
+    if (stock.toString().trim() === "") {
+      errors.push("Stock no puede estar vacío si se proporciona");
+    } else if (isNaN(parseInt(stock)) || parseInt(stock) < 0) {
+      errors.push("Stock debe ser un número entero mayor o igual a 0");
+    }
+  }
+
   // Imagen es opcional pero si se proporciona debe ser una URL válida
-  if (imagen !== undefined && imagen.trim() !== "") {
+  if (img !== undefined && img.trim() !== "") {
     const urlPattern =
       /^(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
-    if (!urlPattern.test(imagen)) {
+    if (!urlPattern.test(img)) {
       errors.push("Imagen debe ser una URL válida");
     }
   }
@@ -44,12 +59,17 @@ export const validateMenuItemCreate = (req, res, next) => {
 };
 
 export const validateMenuItemUpdate = (req, res, next) => {
-  const { categoria, producto, precio, descripcion, imagen } = req.body;
+  const { categoria, subcategoria, producto, precio, descripcion, stock, img } =
+    req.body;
   const errors = [];
 
   // Para actualización, los campos son opcionales pero si se proporcionan deben ser válidos
   if (categoria !== undefined && categoria.trim() === "") {
     errors.push("Categoría no puede estar vacía");
+  }
+
+  if (subcategoria !== undefined && subcategoria.trim() === "") {
+    errors.push("Subcategoría no puede estar vacía");
   }
 
   if (producto !== undefined && producto.trim() === "") {
@@ -68,10 +88,18 @@ export const validateMenuItemUpdate = (req, res, next) => {
     errors.push("Descripción no puede estar vacía");
   }
 
-  if (imagen !== undefined && imagen.trim() !== "") {
+  if (stock !== undefined) {
+    if (stock.toString().trim() === "") {
+      errors.push("Stock no puede estar vacío");
+    } else if (isNaN(parseInt(stock)) || parseInt(stock) < 0) {
+      errors.push("Stock debe ser un número entero mayor o igual a 0");
+    }
+  }
+
+  if (img !== undefined && img.trim() !== "") {
     const urlPattern =
       /^(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
-    if (!urlPattern.test(imagen)) {
+    if (!urlPattern.test(img)) {
       errors.push("Imagen debe ser una URL válida");
     }
   }

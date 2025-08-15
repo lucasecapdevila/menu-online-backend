@@ -1,13 +1,15 @@
 export const SHEET_COLUMNS = {
   ID: "A",
   CATEGORIA: "B",
-  PRODUCTO: "C",
-  PRECIO: "D",
-  DESCRIPCION: "E",
-  IMAGEN: "F",
+  SUBCATEGORIA: "C",
+  PRODUCTO: "D",
+  PRECIO: "E",
+  DESCRIPCION: "F",
+  STOCK: "G",
+  IMG: "H",
 };
 
-export const SHEET_RANGE = "A:G";
+export const SHEET_RANGE = "A:H";
 
 export const HTTP_STATUS = {
   OK: 200,
